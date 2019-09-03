@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AllArrayProblems {
+    public static void main(String[] args) {
+        System.out.println(trappingRainWater(new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}));
+    }
 
     public static int singleNumber(int[] nums){
         int x =0;
@@ -56,5 +59,18 @@ public class AllArrayProblems {
                 matrix[i][j] = temp;
             }
         }
+    }
+
+    public static int trappingRainWater(int[] heights){
+        if(heights == null || heights.length == 0){
+            return 0;
+        }
+        int maxHeightSoFar = 0, l = 0, r = heights.length - 1, res = 0;;
+        while (l < r){
+            int smallest = heights[ heights[l] < heights[r] ? l++ : r--];
+            maxHeightSoFar = Math.max(maxHeightSoFar, smallest);
+            res += maxHeightSoFar - smallest;
+        }
+        return res;
     }
 }
