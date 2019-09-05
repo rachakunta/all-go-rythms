@@ -1,7 +1,9 @@
 package com.rana.arrays;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AllArrayProblems {
     public static void main(String[] args) {
@@ -72,5 +74,42 @@ public class AllArrayProblems {
             res += maxHeightSoFar - smallest;
         }
         return res;
+    }
+
+    //LC 523
+    public boolean checkSubarraySum(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        int sum = 0;
+        for(int i=0; i< nums.length; i++){
+            sum += nums[i];
+            if(k != 0) {
+                sum %= k;
+            }
+            Integer idx = map.get(sum);
+            if(idx != null){
+                if(i - idx > 1) return true;
+            }
+            else{
+                map.put(sum, i);
+            }
+        }
+        return false;
+    }
+
+    //LC 974
+    public int subarraysDivByK(int[] A, int K) {
+        int[] map = new int[K];
+        map[0] = 1;
+        int sum = 0;
+        int count = 0;
+        for(int i=0; i< A.length; i++){
+            sum += A[i];
+            sum %= K;
+            if(sum < 0) sum += K;
+            count += map[sum];
+            map[sum] = map[sum] + 1;
+        }
+        return count;
     }
 }
