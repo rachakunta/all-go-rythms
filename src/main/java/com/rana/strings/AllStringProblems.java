@@ -4,13 +4,16 @@ import java.util.*;
 
 public class AllStringProblems {
     public static void main(String[] args) {
-        String[] s = {"hot", "dot", "dog", "lot", "log", "cog"};
-        String begin = "hit", end = "cog";
+        //String[] s = {"hot", "dot", "dog", "lot", "log", "cog"};
+        //String begin = "hit", end = "cog";
         //System.out.println(ladderLength(begin, end, Arrays.asList(s)));
         //System.out.println(longestNonRepeatSubstring("a"));
         //System.out.println(regularExpressionMatch("abcsdfsdfxxxx", "abc.*x"));
         //System.out.println(regularExpressionMatch("abcsdfsdfxxxx", "abcd*x"));
-        System.out.println(canConstruct("aaa", "ababaab"));
+        //System.out.println(canConstruct("aaa", "ababaab"));
+        //String[] strings = {"900 mail.google.com", "10 mail.yahoo.com", "50 yahoo.com", "11 com"};
+        //System.out.println(subdomainVisits(strings));
+        System.out.println(longestPalindrome("aaa"));
     }
 
     //LP 127
@@ -108,5 +111,52 @@ public class AllStringProblems {
             }
         }
         return true;
+    }
+
+    public static List<String> subdomainVisits(String[] cpdomains) {
+        HashMap<String, Integer> map = new HashMap<>();
+        for(int i=0; i< cpdomains.length; i++){
+            String[] s = cpdomains[i].split(" ");
+            while(!s[1].isEmpty()){
+                if(!map.containsKey(s[1])){
+                    map.put(s[1], Integer.valueOf(s[0]));
+                }
+                else{
+                    map.put(s[1], map.get(s[1]) + Integer.parseInt(s[0]));
+                }
+                int idx = s[1].indexOf(".");
+                if(idx == -1) break;
+                s[1] = s[1].substring(idx + 1, s[1].length());
+            }
+        }
+        List<String> list = new ArrayList<>();
+        for(Map.Entry<String, Integer> entry : map.entrySet()){
+            list.add(entry.getValue() +" "+entry.getKey());
+        }
+        //System.out.println(map.keySet()+" "+map.values());
+        return list;
+    }
+
+    //LP 5
+    public static String longestPalindrome(String s) {
+        int len = 0, len1 = 0, len2 = 0, end = 0, start = 0;
+        for(int i = 0; i< s.length(); i++){
+            len1 = expandFromCenter(i, i, s);
+            len2 = expandFromCenter(i, i+1, s);
+            len = Math.max(len1, len2);
+            if(len > end - start){
+                start = i - (len - 1)/2;
+                end = i + len/2;
+            }
+        }
+        return s.substring(start, end + 1);
+    }
+
+    private static int expandFromCenter(int l, int r, String s){
+        while (l >=0 && r< s.length() && s.charAt(l) == s.charAt(r)){
+                l--;
+                r++;
+            }
+        return r - l - 1;
     }
 }
