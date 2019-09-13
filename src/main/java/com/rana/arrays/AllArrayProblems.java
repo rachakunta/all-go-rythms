@@ -1,13 +1,15 @@
 package com.rana.arrays;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AllArrayProblems {
     public static void main(String[] args) {
-        System.out.println(trappingRainWater(new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}));
+        //System.out.println(trappingRainWater(new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}));
+        //System.out.println(maxSubArray(new int[]{-2,1,-3,4,-1,2,1,-5,4}));
+        //System.out.println(Arrays.toString(twoSumSorted(new int[]{2, 7, 11, 15}, 9)));
+        //System.out.println(compress(new char[]{'a','a','b','b','c','c','c'}));
+        //System.out.println(fizzBuzz(15));
+        System.out.println(maxScoreSightseeingPair(new int[]{8,1,5,2,6, 9}));
     }
 
     public static int singleNumber(int[] nums){
@@ -111,5 +113,97 @@ public class AllArrayProblems {
             map[sum] = map[sum] + 1;
         }
         return count;
+    }
+
+    //LC 53
+    public static int maxSubArray(int[] nums) {
+        int max = Integer.MIN_VALUE;
+        int sum = 0;
+        int start =0, end = 0, s = 0;
+        for(int i = 0; i< nums.length; i++){
+            int n = nums[i];
+            sum = sum + n;
+            if(sum > max){
+                max = sum;
+                start = s;
+                end = i;
+            }
+            if(sum < 0){
+                sum = 0;
+                s = i + 1;
+            }
+        }
+        System.out.println("starting from "+start + " and ending " + end);
+        return max;
+    }
+
+    //LC 167
+    public static int[] twoSumSorted(int[] numbers, int target) {
+        int l = 0, r = numbers.length - 1;
+        while(l < r){
+            int sum = numbers[l] + numbers[r];
+            if(target == sum) return new int[]{l + 1, r + 1};
+
+            if(sum > target){
+                r--;
+            }
+            else{
+                l++;
+            }
+        }
+        return new int[2];
+    }
+
+    //LC 443
+    public static int compress(char[] chars) {
+        int s = 0, e = chars.length, start = 0, count = 0, idx = 0;
+        while(start < e){
+            char c = chars[s];
+            while(start < e && chars[start] == c){
+                start++;count++;
+            }
+            chars[idx++] = c;
+
+            if(count > 1){
+                for(char  cr : String.valueOf(count).toCharArray()){
+                    chars[idx++] = cr;
+                }
+            }
+            s = count;
+        }
+        return idx;
+    }
+
+    //LC 412
+    public static List<String> fizzBuzz(int n) {
+        List<String> list = new ArrayList<>();
+
+        for(int i=1; i<= n;i++){
+            if(i % 3 ==0 || i % 5 == 0){
+                if(i % 3 ==0 && i % 5 == 0){
+                    list.add("FizzBuzz");
+                }
+                else if(i % 3 == 0){
+                    list.add("Fizz");
+                }
+                else {
+                    list.add("buzz");
+                }
+            }
+            else {
+                list.add(String.valueOf(i));
+            }
+        }
+        return list;
+    }
+
+    //LC 1014
+    public static int maxScoreSightseeingPair(int[] A) {
+        int res = 0, cur = 0;
+        for (int a: A) {
+            res = Math.max(res, cur + a);
+            cur = Math.max(cur, a) - 1;
+        }
+        return res;
     }
 }
