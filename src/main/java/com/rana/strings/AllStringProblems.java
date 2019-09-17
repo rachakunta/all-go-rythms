@@ -5,6 +5,7 @@ import java.util.*;
 public class AllStringProblems {
     public static void main(String[] args) {
         //String[] s = {"hot", "dot", "dog", "lot", "log", "cog"};
+        String[] s = {"samantha", "samanth", "saman", "sam"};
         //String begin = "hit", end = "cog";
         //System.out.println(ladderLength(begin, end, Arrays.asList(s)));
         //System.out.println(longestNonRepeatSubstring("a"));
@@ -13,7 +14,15 @@ public class AllStringProblems {
         //System.out.println(canConstruct("aaa", "ababaab"));
         //String[] strings = {"900 mail.google.com", "10 mail.yahoo.com", "50 yahoo.com", "11 com"};
         //System.out.println(subdomainVisits(strings));
-        System.out.println(longestPalindrome("aaa"));
+        //System.out.println(longestPalindrome("aaa"));
+        //System.out.println(zigzagConvertion("PAYPALISHIRING", 3));
+        //System.out.println(longestCommonPrefix(s));
+        //System.out.println(letterCombinations("2345"));
+        //System.out.println(validParanthesis("()())"));
+        //System.out.println(generateParenthesis(2));
+        //System.out.println(strStr("rachakunta", "kunta"));
+        String[] anagrams = {"rana", "anra", "naar", "ant", "tan", "nat", "sri"};
+        System.out.println(groupAnagrams(anagrams));
     }
 
     //LP 127
@@ -158,5 +167,163 @@ public class AllStringProblems {
                 r++;
             }
         return r - l - 1;
+    }
+
+    public static String zigzagConvertion(String s, int rows){
+        if(rows == 1) return s;
+        List<StringBuilder> sb = new ArrayList<>();
+        for(int i=0; i< Math.min(rows, s.length()); i++){
+            sb.add(new StringBuilder());
+        }
+
+        int row = 0;
+        boolean down = false;
+
+        for(char c : s.toCharArray()){
+            sb.get(row).append(c);
+            if(row == 0 || row == rows - 1){
+                down = !down;
+            }
+            row += down ? 1 : -1;
+        }
+        StringBuilder res = new StringBuilder();
+        for(int i =0; i< rows; i++){
+            res.append(sb.get(i));
+        }
+        return res.toString();
+    }
+
+    /*public static String longestCommonPrefix(String[] strings){
+        int[] chars = new int[26];
+        for(int i=0; i< strings.length; i++){
+            insertHelper(chars, i, strings[i]);
+        }
+
+        if(chars[strings[0].charAt(0) -'a'] == 1) {
+            return "";
+        }
+        StringBuilder s = new StringBuilder();
+        for(int i = 0; i< strings[0].length(); i++){
+            char c = strings[0].charAt(i);
+            if(chars[c - 'a'] == strings.length){
+                s.append(c);
+            }
+            else{
+                break;
+            }
+        }
+        return s.toString();
+    }
+
+    private static void insertHelper(int[] chars, int i, String s){
+        for(char c : s.toCharArray()){
+            int cr = c - 'a';
+            if(chars[cr] == i){
+                chars[cr] += 1;
+            }
+            else{
+                break;
+            }
+        }
+    }*/
+
+    public static String longestCommonPrefix(String[] strings){
+        StringBuilder sb = new StringBuilder(strings[0]);
+        for(String s : strings){
+            while(s.indexOf(sb.toString()) != 0){
+                sb.deleteCharAt(sb.length() - 1);
+            }
+
+            if(sb.length() == 0){
+                return "";
+            }
+        }
+        return sb.toString();
+    }
+
+    public static List<String> letterCombinations(String digits) {
+        LinkedList<String> res =  new LinkedList<>();
+        res.add("");
+        String[] mapping = {"", "1", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        for(int i=0; i< digits.length(); i++){
+            String st = mapping[digits.charAt(i) - '0'];
+            while(res.peek().length() == i){
+                String s = res.remove();
+                for(int j=0; j< st.length();j++){
+                    res.add(s + st.charAt(j));
+                }
+            }
+        }
+        return res;
+    }
+
+    public static boolean validParanthesis(String s){
+        Stack<Character> stack = new Stack<>();
+        for(char c : s.toCharArray()){
+            switch (c){
+                case '(' : stack.push(')');
+                        break;
+                case '[' : stack.push(']');
+                    break;
+                case '{' : stack.push('}');
+                    break;
+                default: if(stack.empty() || stack.pop() != c){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static List<String> generateParenthesis(int n) {
+        List<String> ans = new LinkedList<>();
+        dfs(ans, n,n, new StringBuilder());
+        return ans;
+    }
+
+    private static void dfs(List<String> ans, int l, int r, StringBuilder stringBuilder) {
+        if(r < l){
+            return;
+        }
+        if(l == 0 && r == 0){
+            ans.add(stringBuilder.toString());
+            return;
+        }
+
+        if(l >0){
+            stringBuilder.append("(");
+            dfs(ans, l - 1,r,stringBuilder);
+        }
+        int s = stringBuilder.length();
+        if(r >0){
+            stringBuilder.append(")");
+            dfs(ans, l,r - 1,stringBuilder);
+        }
+        stringBuilder.delete(Math.max(0, s - 1), stringBuilder.length());
+    }
+
+    public static int strStr(String haystack, String needle) {
+        for(int i=0; i<= haystack.length() - needle.length(); i++){
+            for(int j=0; j< needle.length() && haystack.charAt(i + j) == needle.charAt(j); j++){
+                if(j == needle.length() -1){
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String, List<String>> map = new HashMap<>();
+        for(String s : strs){
+            char[] chars = s.toCharArray();
+            Arrays.sort(chars);
+            String st = Arrays.toString(chars);
+            if(!map.containsKey(st)) {
+                map.put(st, new ArrayList<String>());
+            }
+                map.get(st).add(s);
+        }
+        return new ArrayList<>(map.values());
     }
 }
