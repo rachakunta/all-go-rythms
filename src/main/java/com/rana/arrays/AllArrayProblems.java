@@ -14,8 +14,17 @@ public class AllArrayProblems {
 
         //System.out.println(Arrays.toString("\"12..33.4\"".split("wwwwwwwwxxd\\.")));
         //System.out.println(validIPAddress("12..33.4"));
-        int[][] intervals = {{2, 11}, {9,10} , {5, 9}};
-        System.out.println(minMeetingRooms(intervals));
+        int[][] intervals = {{2, 11}, {9, 10}, {5, 9}};
+        //System.out.println(minMeetingRooms(intervals));
+        int[][] twoDMatrix = {
+                {1, 1}
+                /*{1, 4, 7, 11, 15},
+                {2, 5, 8, 12, 19},
+                {3, 6, 9, 16, 22},
+                {10, 13, 14, 17, 24},
+                {18, 21, 23, 26, 30}*/
+        };
+        System.out.println(searchMatrix(twoDMatrix, 1));
     }
 
     public static int singleNumber(int[] nums) {
@@ -302,7 +311,7 @@ public class AllArrayProblems {
             if (start[s] >= end[e]) {
                 e++;
             } else {
-                while (s+1 < intervals.length && start[s+1] < end[e]) {
+                while (s + 1 < intervals.length && start[s + 1] < end[e]) {
                     s++;
                 }
                 min++;
@@ -310,5 +319,21 @@ public class AllArrayProblems {
             }
         }
         return min;
+    }
+
+    //LP 240
+    public static boolean searchMatrix(int[][] matrix, int target) {
+        int row = matrix.length - 1, col = 0;
+        while (row >=0 && row < matrix.length && col >=0 && col < matrix[0].length) {
+            int value = matrix[row][col];
+            if (value == target) {
+                return true;
+            } else if (value > target) {
+                row--;
+            } else {
+                col++;
+            }
+        }
+        return false;
     }
 }

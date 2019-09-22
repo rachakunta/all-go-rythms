@@ -22,7 +22,13 @@ public class AllStringProblems {
         //System.out.println(generateParenthesis(2));
         //System.out.println(strStr("rachakunta", "kunta"));
         String[] anagrams = {"rana", "anra", "naar", "ant", "tan", "nat", "sri"};
-        System.out.println(groupAnagrams(anagrams));
+        //System.out.println(groupAnagrams(anagrams));
+        //System.out.println(countAndSay(5));
+        //System.out.println(multiply("", "99"));
+        //System.out.println(intString("5a1b3c"));
+        String[] strings = {"FooBar","FooBarTest","FootBall","FrameBuffer","ForceFeedBack"};
+        String pattern = "FoBa";
+        System.out.println(camelMatch(strings,pattern));
     }
 
     //LP 127
@@ -325,5 +331,99 @@ public class AllStringProblems {
                 map.get(st).add(s);
         }
         return new ArrayList<>(map.values());
+    }
+
+    public static String countAndSay(int n) {
+        if(n == 1) return "1";
+        StringBuilder sb = new StringBuilder();
+        String prev = countAndSay( n-1);
+        int start =0, end = prev.length();
+        while(start < end){
+            char curr = prev.charAt(start);
+            int count =0;
+            while(count + start < end && prev.charAt(count + start) == curr){
+                count++;
+            }
+            sb.append(count);
+            sb.append(curr);
+            start = start + count;
+        }
+        return sb.toString();
+    }
+
+    public static String multiply(String num1, String num2) {
+        int s1 = num1.length();
+        int s2 = num2.length();
+        int dp[] = new int[s1 + s2];
+        for(int i= s1 - 1; i>= 0; i--){
+            for(int j= s2 -1; j>=0; j--){
+                int c1 = num1.charAt(i) - '0';
+                int c2 = num2.charAt(j) - '0';
+                dp[i + j + 1] += c1 * c2;
+            }
+        }
+        int carry =0;
+        for(int i = dp.length - 1; i>=0; i--){
+            int num = dp[i] + carry;
+            dp[i] = num % 10;
+            carry = num / 10;
+        }
+        StringBuilder sb = new StringBuilder();
+        boolean flag = false;
+        for(int i : dp){
+            if(i != 0){
+                flag = true;
+            }
+            if(flag){
+                sb.append(i);
+            }
+        }
+        return sb.toString();
+    }
+
+    public static String intString(String s){
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<s.length(); i++){
+            int times = 0;
+            int chars = s.charAt(i) - '0';
+            int t = i;
+            while(0 <=chars && chars <=9){
+                times = times * 10 + chars;
+                if(i + 1 < s.length()){
+                    chars = s.charAt(++i) - '0';
+                }
+            }
+            if(t != i){
+                while(times-- >0){
+                    sb.append(s.charAt(i));
+                }
+            }else {
+                sb.append(s.charAt(i));
+            }
+        }
+        return sb.toString();
+    }
+
+    //LP 1023
+    public static List<Boolean> camelMatch(String[] queries, String pattern) {
+        List<Boolean> ans = new ArrayList<>();
+            for(int j = 0; j< queries.length; j++){
+                ans.add(checkString(queries[j], pattern));
+            }
+            return ans;
+    }
+
+    private static Boolean checkString(String query, String pattern) {
+        int j=0;
+        for(int k = 0; k< query.length(); k++){
+            char c = query.charAt(k);
+            if((j< pattern.length() && pattern.charAt(j) == c)){
+                j++;
+            }
+            else if(Character.isUpperCase(c)){
+                return false;
+            }
+        }
+        return j == pattern.length();
     }
 }
