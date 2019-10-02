@@ -12,7 +12,7 @@ public class AllStringProblems {
         //System.out.println(regularExpressionMatch("abcsdfsdfxxxx", "abc.*x"));
         //System.out.println(regularExpressionMatch("abcsdfsdfxxxx", "abcd*x"));
         //System.out.println(canConstruct("aaa", "ababaab"));
-        //String[] strings = {"900 mail.google.com", "10 mail.yahoo.com", "50 yahoo.com", "11 com"};
+        String[] strings = {"900 mail.google.com", "10 mail.yahoo.com", "50 yahoo.com", "11 com"};
         //System.out.println(subdomainVisits(strings));
         //System.out.println(longestPalindrome("aaa"));
         //System.out.println(zigzagConvertion("PAYPALISHIRING", 3));
@@ -26,9 +26,15 @@ public class AllStringProblems {
         //System.out.println(countAndSay(5));
         //System.out.println(multiply("", "99"));
         //System.out.println(intString("5a1b3c"));
-        String[] strings = {"FooBar","FooBarTest","FootBall","FrameBuffer","ForceFeedBack"};
+        String[] strings2 = {"FooBar","FooBarTest","FootBall","FrameBuffer","ForceFeedBack"};
         String pattern = "FoBa";
-        System.out.println(camelMatch(strings,pattern));
+        //System.out.println(camelMatch(strings,pattern));
+        String[] ss =  {"ahjpjau","ja","ahbwzgqnuk","tnmlanowax"};
+        //System.out.println(numMatchingSubseq("dsahjpjauf", ss));
+        //calculateClicksByDomain(strings);
+        //findAndReplacePattern(new String[]{"badc","abab","dddd","dede","yyxx"}, "didi");
+        String[][] places = {{"JFK","SFO"},{"JFK","ATL"},{"SFO","ATL"},{"ATL","JFK"},{"ATL","SFO"}};
+        System.out.println(findItinerary(places));
     }
 
     //LP 127
@@ -425,5 +431,104 @@ public class AllStringProblems {
             }
         }
         return j == pattern.length();
+    }
+
+    //LC 792
+    public static int numMatchingSubseq(String S, String[] words) {
+        int res = 0;
+        ArrayList<HashSet<StringBuilder>>[] chars = new ArrayList[26];
+        for(int i=0; i< 26; i++){
+            chars[i] = new ArrayList<>();
+        }
+        int i=0;
+        for(String word : words){
+            HashSet<StringBuilder> map = new HashSet<>();
+            map.add(new StringBuilder(word));
+            chars[word.charAt(0) - 'a'].add(map);
+        }
+        for(char s : S.toCharArray()){
+            boolean bl = chars[s - 'a'].isEmpty();
+            if(bl) continue;
+            ArrayList<HashSet<StringBuilder>> backup = chars[s - 'a'];
+            chars[s - 'a'] = new ArrayList<>();
+            for(HashSet<StringBuilder> map : backup) {
+                for (StringBuilder k : map) {
+                    k.deleteCharAt(0);
+                    if (k.length() == 0) {
+                        ++res;
+                    } else {
+                        HashSet<StringBuilder> mp = new HashSet<>();
+                        mp.add(new StringBuilder(k));
+                        chars[k.charAt(0) - 'a'].add(mp);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    private static HashMap<String,Integer> calculateClicksByDomain(String[] counts){
+        HashMap<String, Integer> res = new HashMap<>();
+        for(String s : counts){
+            String[] splits = s.split(" ");
+            int value = Integer.parseInt(splits[0]);
+            String key = splits[1];
+            while(true){
+                if(res.containsKey(key)){
+                    res.put(key, value + res.get(key));
+                }
+                else{
+                    res.put(key, value);
+                }
+                int idx = key.indexOf(".");
+                if(idx == -1) break;
+                key = key.substring(idx + 1);
+            }
+        }
+        System.out.println(res);
+        return res;
+    }
+
+    //LC 890
+    public static List<String> findAndReplacePattern(String[] words, String pattern) {
+        List<String> res = new ArrayList<>();
+        int[] patternCount = helperFindAndReplacePattern(pattern);
+        for(String s : words){
+            int[] count = helperFindAndReplacePattern(s);
+            if(s.length() == pattern.length() && Arrays.equals(count, patternCount)){
+                res.add(s);
+            }
+        }
+        System.out.println(res);
+        return res;
+    }
+
+    private static int[] helperFindAndReplacePattern(String pattern){
+        int len = pattern.length();
+        int[] n = new int[len];
+        LinkedHashMap<Character, Integer> map = new LinkedHashMap<>();
+        int i =0;
+        for(char c : pattern.toCharArray()){
+            map.putIfAbsent(c, i);
+            n[i] = map.get(c);
+            i++;
+        }
+        return n;
+    }
+
+    public static List<String> findItinerary(String[][] tickets) {
+        HashMap<String, PriorityQueue<String>> targets = new HashMap<>();
+        for (String[] ticket : tickets)
+            targets.computeIfAbsent(ticket[0], k -> new PriorityQueue()).add(ticket[1]);
+        List<String> route = new LinkedList();
+        Stack<String> stack = new Stack<>();
+
+        stack.push("JFK");
+        while (!stack.empty()) {
+            while (targets.containsKey(stack.peek()) && !targets.get(stack.peek()).isEmpty())
+                stack.push(targets.get(stack.peek()).poll());
+            route.add(0, stack.pop());
+        }
+        return route;
     }
 }

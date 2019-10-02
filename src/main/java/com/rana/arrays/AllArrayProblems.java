@@ -24,7 +24,23 @@ public class AllArrayProblems {
                 {10, 13, 14, 17, 24},
                 {18, 21, 23, 26, 30}*/
         };
-        System.out.println(searchMatrix(twoDMatrix, 1));
+        //System.out.println(searchMatrix(twoDMatrix, 1));
+        int[][] grid = {
+                {0,1,2,0},
+                {3,4,5,2},
+                {1,3,1,5}
+        };
+        //System.out.println(numIslands(grid));
+        String[] ss = {"i", "love", "leetcode", "leetcode", "i", "love", "coding"};
+        //System.out.println(topKFrequent(ss, 2));
+        //setZeroes(grid);
+        for(int[] n : grid){
+            //System.out.println(Arrays.toString(n));
+        }
+        char[] chars = "the sky is blue".toCharArray();
+        //reverseWords(chars);
+        //System.out.println(Arrays.toString(chars));
+        System.out.println(reverseWords(""));
     }
 
     public static int singleNumber(int[] nums) {
@@ -335,5 +351,157 @@ public class AllArrayProblems {
             }
         }
         return false;
+    }
+
+    public static int numIslands(char[][] grid) {
+        if(grid == null || grid.length == 0) return 0;
+        int length = grid.length;
+        int width = grid[0].length;
+        boolean[][] visited = new boolean[length][width];
+        int count= 0;
+        for(int i=0;i<length;i++){
+            for(int j=0;j<width;j++){
+                if(!visited[i][j] && grid[i][j] == 1) {
+                    numOfIslandsHelper(grid, visited, i, j);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private static void numOfIslandsHelper(char[][] grid, boolean[][] visited, int i, int j) {
+        if(!(i>= 0 && j>=0 && i<grid.length && j<grid[0].length)){
+            return;
+        }
+        if(visited[i][j]){
+            return;
+        }
+        if(grid[i][j] == 0){
+            return;
+        }
+        visited[i][j] = true;
+        numOfIslandsHelper(grid, visited, i+1, j);
+        numOfIslandsHelper(grid, visited, i-1, j);
+        numOfIslandsHelper(grid, visited, i, j+1);
+        numOfIslandsHelper(grid, visited, i, j-1);
+    }
+
+    public static List<String> topKFrequent(String[] words, int k) {
+        if(words.length == 0 || k == 0) return new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
+        for(String s : words){
+            map.put(s, map.getOrDefault(s, 0)+1);
+        }
+
+        PriorityQueue<String> pq = new PriorityQueue<>(new Comparator<String>(){
+            public int compare(String o1, String o2){
+                return map.get(o1).equals(map.get(o2)) ? o2.compareTo(o1) : map.get(o1) - map.get(o2);
+            }
+        });
+
+        for(String s : map.keySet()){
+            pq.add(s);
+            if(pq.size() > k){
+                pq.poll();
+            }
+        }
+
+        List<String> ans = new ArrayList();
+        while (!pq.isEmpty()) ans.add(pq.poll());
+        Collections.reverse(ans);
+        return ans;
+    }
+
+    public static void setZeroes(int[][] matrix) {
+        if(matrix == null || matrix.length == 0) return;
+        int r = matrix.length;
+        int c = matrix[0].length;
+        boolean isCol = false;
+        boolean isRow = false;
+        for (int i = 0; i < r; i++) {
+            isRow = isRow || matrix[i][0] == 0;
+            for (int j = 1; j < c; j++) {
+                //isCol = isCol || matrix[0][j] == 0;
+                int val = matrix[i][j];
+                if(val == 0){
+                    matrix[0][j] = 0;
+                    matrix[i][0] = 0;
+                }
+            }
+        }
+
+        for (int i = 1; i < r; i++) {
+            for (int j = 1; j < c; j++) {
+                if(matrix[0][j] == 0 || matrix[i][0] == 0){
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        if(matrix[0][0] == 0){
+            for(int i=0; i< c;i++)
+                matrix[0][i] = 0;
+        }
+        if(isRow){
+            for(int i=0; i< r;i++)
+                matrix[i][0] = 0;
+        }
+    }
+
+    public static void reverseWords(char[] s) {
+        int len = s.length;
+        if(s == null || len == 0) return;
+        int start= 0;
+        reverse(s,0,len -1);
+        int st= 0;
+        for(int i=0; i<= len;i++){
+            if(s[i] == ' ' || i == len - 1){
+                if(i == len - 1){
+                    i = len;
+                }
+                reverse(s, st, i-1);
+                st = i + 1;
+            }
+        }
+
+    }
+
+    private static int removeSpaces(char[] s) {
+        int idx = 0;
+        for(int i=0; i< s.length; i++){
+            if(i > 0 && s[i] == ' ' && s[i -1] == ' '){
+                continue;
+            }
+            else{
+                s[idx++] = s[i];
+            }
+        }
+        if(s[idx - 1] == ' ') idx--;
+        return idx-1;
+    }
+
+    private static void reverse(char[] chars, int s, int e){
+        while(s<e) {
+            char t = chars[s];
+            chars[s++] = chars[e];
+            chars[e--] = t;
+        }
+    }
+
+    //LC 151
+    public static String reverseWords(String s) {
+        char[] chars = s.toCharArray();
+        int trimmedEnd = removeSpaces(chars);
+        int trimmedStart = 0;
+        while(chars[trimmedStart] == ' '){
+            trimmedStart++;
+            continue;
+        }
+        chars = Arrays.copyOfRange(chars, trimmedStart, trimmedEnd + 1);
+        int newLen = chars.length;
+        //reverse(chars, 0, newLen - 1);
+        reverseWords(chars);
+        String trimmed = new String(chars);
+        return new String(trimmed);
     }
 }

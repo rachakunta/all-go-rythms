@@ -3,7 +3,7 @@ package com.rana.trees;
 public class AllTreeProblems {
 
     public static void main(String[] args) {
-
+        System.out.println(new TreeNode.Tree().generateTrees(5).toString());
     }
 
     public static int maxDepthOfNArrTree(TreeNode root){
@@ -20,4 +20,5 @@ public class AllTreeProblems {
         }
         return max + 1;
     }
+
 }
