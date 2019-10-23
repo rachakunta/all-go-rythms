@@ -1,5 +1,7 @@
 package com.rana.strings;
 
+import com.rana.trees.TreeNode;
+
 import java.util.*;
 
 public class AllStringProblems {
@@ -34,7 +36,48 @@ public class AllStringProblems {
         //calculateClicksByDomain(strings);
         //findAndReplacePattern(new String[]{"badc","abab","dddd","dede","yyxx"}, "didi");
         String[][] places = {{"JFK","SFO"},{"JFK","ATL"},{"SFO","ATL"},{"ATL","JFK"},{"ATL","SFO"}};
-        System.out.println(findItinerary(places));
+        //System.out.println(findItinerary(places));
+        //System.out.println(angleBrackets("><<><"));
+        //System.out.println(LIS(new int[]{0,1,2,3,8,9,10,11,2,3,4,9,6,7,8,9}));
+        //System.out.println(longestCommonSubsequence("abcde", "ababde"));
+        //System.out.println(longestCommonSubsequenceDP("pmjghexybyrgzczy", "hafcdqbgncrcbihkd"));
+        //System.out.println(lcsOfStrings(new String[]{"red", "green", "blue", "yellow", "white"},
+          //      new String[]{"red", "green", "red", "ss","blue","white"}));
+        //System.out.println(minWindow("ADOBECODEBANC", "ABC"));
+        //System.out.println(paintnsticks(5));
+        //System.out.println(maxSubArrayLen(new int[]{1,2,3,-1,-3,-2,0,2,5,6,-5}, 0));
+        //System.out.println(rearrangeString("abcdabcdabdeac", 4));
+        //System.out.println(partitionLabels("abcdcdcdachijuihu"));
+        //proofSorting();
+        //System.out.println(isValidPalindrome("12m;'a./l/a.yala m21"));
+        //System.out.println(constructTree("1(2(3)(4))(6(9)(8))"));
+        System.out.println(constructLevelOrder(new int[] {1,2,3,4,5,6}));
+    }
+
+    private static List<String> lcsOfStrings(String[] str1, String[] str2) {
+        int s1 = str1.length;
+        int s2 = str2.length;
+        int max = 0;
+        List<String> res = new ArrayList<>();
+        int[][] dp = new int[s1 + 1][s2 + 1];
+        for(int i=1; i<= s1; i++){
+            for(int j= 1; j<= s2; j++){
+                String c1 = str1[i-1];
+                String c2 = str2[j-1];
+                if(c1.equals(c2)){
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                }
+                else{
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j -1]);
+                }
+                if(dp[i][j] > max){
+                    max = dp[i][j];
+                    res.add(c1);
+                }
+            }
+        }
+        System.out.println(res);
+        return res;
     }
 
     //LP 127
@@ -530,5 +573,405 @@ public class AllStringProblems {
             route.add(0, stack.pop());
         }
         return route;
+    }
+
+    //TODO
+    public static String angleBrackets(String angles) {
+        // Type your solution here
+        StringBuilder sb = new StringBuilder();
+        int right = 0;
+        int left = 0;
+        for(char c : angles.toCharArray()) {
+            if(c == '<'){
+                left++;
+            }
+            else{
+                right++;
+            }
+        }
+        if(left > right){
+            sb.append(angles);
+            while(left != right){
+                sb.append('>');
+                left--;
+            }
+        }
+        else{
+
+        }
+        return "";
+    }
+
+    public static int LIS(int[] nums){
+        int count = 0;
+        int[] dp = new int[nums.length];
+        int len = 0;
+        for(int a  : nums){
+            int n = Arrays.binarySearch(dp,0, len, a);
+            if(n < 0){
+                n = -(n + 1);
+            }
+            dp[n] = a;
+            if(n == len) len++;
+        }
+        return len;
+    }
+
+    public static int longestCommonSubsequence(String text1, String text2) {
+        int s1 = text1.length();
+        int s2 = text2.length();
+        int max = 0;
+        List<Character> res = new ArrayList<>();
+        int[][] dp = new int[s1 + 1][s2 + 1];
+        for(int i=1; i<= s1; i++){
+            for(int j= 1; j<= s2; j++){
+                char c1 = text1.charAt(i-1);
+                char c2 = text2.charAt(j-1);
+                if(c1 == c2){
+                    res.add(c1);
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                }
+                else{
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j -1]);
+                }
+            }
+        }
+        System.out.println(res);
+        return max;
+    }
+
+    public static int longestCommonSubsequenceDP(String text1, String text2){
+        return helperLCSDP(text1,text2, text1.length() - 1, text2.length() - 1);
+    }
+
+    private static int helperLCSDP(String text1, String text2, int i, int j){
+        if(text1 == null || text2 == null){
+            return 0;
+        }
+        if(i <0 || j < 0){
+            return 0;
+        }
+        if(text1.charAt(i) == text2.charAt(j)){
+            return 1 + helperLCSDP(text1, text2, i-1, j-1);
+        }
+
+        return Math.max(helperLCSDP(text1, text2, i-1, j), helperLCSDP(text1, text2, i, j-1));
+
+    }
+
+    public static String minWindow(String s, String t) {
+        if(s == null || t == null || s.isEmpty() || t.isEmpty() || s.length() < t.length()) return "";
+
+        HashMap<Character, Integer> map = new HashMap<>();
+        for(char c : t.toCharArray()){
+            if(!map.containsKey(c)){
+                map.put(c, 0);
+            }
+            map.put(c, map.get(c) + 1);
+        }
+
+        int left = 0;
+        int leftIdx = 0;
+        int minLength = s.length() + 1;
+        int count = 0;
+        for(int right = 0; right < s.length(); right++){
+            char c = s.charAt(right);
+            if(map.containsKey(c)){
+                map.put(c, map.get(c) -1);
+                count++;
+            }
+
+            while(count == t.length()){
+                if(right - left + 1 < minLength){
+                    leftIdx = left;
+                    minLength = right - left + 1;
+                }
+                char cc = s.charAt(left);
+                if(map.containsKey(cc)){
+                    map.put(cc, map.get(cc) + 1);
+                    count--;
+                }
+                left++;
+            }
+        }
+        if(minLength > s.length()){
+            return "";
+        }
+        return s.substring(leftIdx, minLength+ leftIdx);
+    }
+
+    private static String searchMinWindow(String s, String t, HashMap<Character, Integer> map){
+        int l = 0, r = 0, length = 0;
+        boolean initial = false;
+        while(l < s.length() && r < s.length() && length != t.length()){
+            char c = s.charAt(r);
+            if(map.containsKey(c)){
+                if(!initial){
+                    initial = true;
+                    l = r;
+                }
+                length++;
+                map.put(c, map.get(c) - 1);
+            }
+            r++;
+        }
+        return s.substring(l, r);
+    }
+
+    private static List<String> paintnsticks(int n){
+        StringBuilder sb = new StringBuilder();
+        ArrayList<String> list = new ArrayList<>();
+        dfsPaintSticks(list, sb, 0, 0, n, 0);
+        return list;
+    }
+
+    private static void dfsPaintSticks(ArrayList<String> strings, StringBuilder sb, int l, int r, int n, int count) {
+        if(Math.abs(count - l) == 3 || Math.abs(count - r) == 3){
+            //sb.deleteCharAt(sb.length() - 1);
+            return;
+        }
+        if(l + r >= n){
+            strings.add(sb.toString());
+            return;
+        }
+        int len = sb.length();
+        count++;
+        dfsPaintSticks(strings, sb.append('W'), l+1, r, n, count);
+
+        sb.delete(len, sb.length());
+        len = sb.length();
+        count++;
+        dfsPaintSticks(strings, sb.append('B'), l, r+1, n, count);
+
+        sb.delete(len, sb.length());
+    }
+
+    public static int maxSubArrayLen(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int max = Integer.MIN_VALUE, sum = 0;
+        for(int i=0; i< nums.length;i++){
+            sum += nums[i];
+
+            if(sum == k){
+                max = i + 1;
+            }
+            else if(map.containsKey(sum - k)){
+                max = Math.max(max, i - map.get(sum-k));
+            }
+            else{
+                map.put(sum, i);
+            }
+        }
+        return max;
+    }
+
+    public static String rearrangeString(String s, int k) {
+        if(s == null || s.length() == 0) return "";
+        if(k == 0) return s;
+        int[] chars = new int[26];
+        int max = Integer.MIN_VALUE;
+        int letter = 27;
+        int count = 0;
+        for(char c : s.toCharArray()){
+            int cr = c - 'a';
+            ++chars[cr];
+            if(max == chars[cr]) count++;
+            if(max < chars[cr]){
+                max = chars[cr];
+                letter = cr;
+                count = 1;
+            }
+        }
+        if((max -1) * k  + count> s.length()) return "";
+        int idx = 0, offSet = 0;
+        char[] res = new char[s.length()];
+        while(chars[letter] >0){
+            res[idx] = (char)(letter + 'a');
+            idx += k;
+            chars[letter]--;
+        }
+        for(int i=0; i< s.length(); i++){
+            int cr = s.charAt(i)- 'a';
+            while(chars[cr] > 0){
+                if(idx >= s.length()){
+                    offSet += 1;
+                    idx = offSet;
+                }
+                res[idx] = (char)(cr + 'a');
+                idx += k;
+                chars[cr]--;
+            }
+        }
+        return String.valueOf(res);
+    }
+
+    public static List<Integer> partitionLabels(String S) {
+        //ababcbacadefegdehijhklij
+        List<Integer> list = new ArrayList<>();
+        int[] chars = new int[26];
+        for(int i=0; i< S.length(); i++){
+            char c = S.charAt(i);
+            chars[c - 'a'] = i;
+        }
+        int temp, rMost = 0, last = 0;
+        for(int i=0; i< S.length(); i++){
+            int c = S.charAt(i) - 'a';
+            rMost = Math.max(rMost, chars[c]);
+            if(i == rMost){
+                list.add(i + 1 - last);
+                last = i + 1;
+            }
+        }
+        return list;
+    }
+
+    public boolean isAlienSorted(String[] words, String order) {
+        int[] chars = new int[26];
+        for(int i=0; i< order.length(); i++)
+            chars[ order.charAt(i) - 'a'] = i;
+            for(int i = 1; i< words.length; i++){
+                if(compare(words[i -1], words[i], chars) > 0) return false;
+            }
+            return true;
+    }
+
+    private int compare(String word, String word1, int[] chars) {
+        int cmp = 0;
+        int m = word.length(), n = word1.length();
+        for(int i = 0, j = 0; i<m && j < n && cmp == 0; i++, j++){
+            int c1 = word.charAt(i) - 'a';
+            int c2 = word.charAt(j) - 'a';
+            cmp = chars[c1] - chars[c2];
+        }
+        return cmp == 0 ? n - m : cmp;
+    }
+
+    private static int[] buildCharsArray(String S){
+        int[] chars = new int[26];
+        for(char c : S.toCharArray()){
+            chars[c - 'a']++;
+        }
+        return chars;
+    }
+
+    private static void proofSorting(){
+        Integer[] nums = new Integer[]{10,2,9,8,4,5,2};
+        PriorityQueue<String> pq = new PriorityQueue<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return Integer.compare(Integer.parseInt(o2+o1), Integer.parseInt(o1+o2));
+            }
+        });
+        for(int n : nums){
+            pq.add(String.valueOf(n));
+        }
+        while(!pq.isEmpty()){
+            System.out.print(pq.poll());
+        }
+
+    }
+
+    public static boolean isValidPalindrome(String s) {
+        int ll = 0, rr = s.length() - 1;
+        while (ll < rr) {
+            char l = s.charAt(ll);
+            char r = s.charAt(rr);
+            boolean isLchar = ('a' <= l && l <= 'z') || ('A' <= l && l <= 'Z') || ('0' <= l && l <= '9');
+            if (!isLchar) {
+                ll++;
+                continue;
+            }
+            boolean isRchar = ('a' <= r && r <= 'z') || ('A' <= r && r <= 'Z') || ('0' <= r && r <= '9');
+            if (!isRchar) {
+                rr--;
+                continue;
+            }
+            if (Character.toLowerCase(l) != Character.toLowerCase(r)) return false;
+            ll++;
+            rr--;
+        }
+        return true;
+    }
+    static class TNode{
+        char val;
+        TNode left;
+        TNode right;
+
+        public TNode(char val){
+            this.val = val;
+        }
+
+        @Override
+        public String toString() {
+            return "TNode{" +
+                    "val=" + val +
+                    ", left=" + left +
+                    ", right=" + right +
+                    '}';
+        }
+    }
+
+    public static TNode constructTree(String s) {
+        Stack<TNode> stack = new Stack<>();
+        boolean left = true;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            switch (c) {
+                case '(':
+                    stack.push(new TNode('('));
+                    break;
+                case ')' :
+                    if(stack.peek().val == '(') {
+                        stack.pop();
+                        left = false;
+                    }
+                    TNode popped = stack.pop();
+                    stack.pop();
+
+                    if (!stack.isEmpty()) {
+                        if (left && stack.peek().left == null) {
+                            stack.peek().left = popped;
+                        } else if (stack.peek().right == null) {
+                            stack.peek().right = popped;
+                            left = true;
+                        }
+                    }
+                    break;
+                default:
+                    if(c == ' ') stack.push(null);
+                    stack.push(new TNode(c));
+            }
+        }
+        return stack.isEmpty() ? null : stack.pop();
+    }
+
+    private static TreeNode constructLevelOrder(int[] nums){
+        Queue<TreeNode> q = new LinkedList<>();
+        TreeNode root = new TreeNode();
+        TreeNode d = root;
+        q.add(d);
+        int i=0;
+        while(i < nums.length){
+            if(i == 0){
+                TreeNode poled = q.poll();
+                poled.val = nums[i++];
+                q.add(poled);
+            }
+            else{
+                int size = q.size();
+                for(int j=0; j< size; j++){
+                    TreeNode polled = q.poll();
+                    if(i +j >=nums.length) continue;
+                    polled.left = new TreeNode(nums[i + j]);
+                    i++;
+                    if(i +j >=nums.length) continue;
+                    polled.right = new TreeNode(nums[i + j]);
+                    i++;
+                    q.add(polled.left);
+                    q.add(polled.right);
+                }
+            }
+        }
+        return root;
     }
 }

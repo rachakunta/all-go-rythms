@@ -26,21 +26,39 @@ public class AllArrayProblems {
         };
         //System.out.println(searchMatrix(twoDMatrix, 1));
         int[][] grid = {
-                {0,1,2,0},
-                {3,4,5,2},
-                {1,3,1,5}
+                {0, 1, 2, 0},
+                {3, 4, 5, 2},
+                {1, 3, 1, 5}
         };
         //System.out.println(numIslands(grid));
         String[] ss = {"i", "love", "leetcode", "leetcode", "i", "love", "coding"};
         //System.out.println(topKFrequent(ss, 2));
         //setZeroes(grid);
-        for(int[] n : grid){
+        for (int[] n : grid) {
             //System.out.println(Arrays.toString(n));
         }
         char[] chars = "the sky is blue".toCharArray();
         //reverseWords(chars);
         //System.out.println(Arrays.toString(chars));
-        System.out.println(reverseWords(""));
+        //System.out.println(reverseWords(""));
+        //System.out.println(calculate("1+(2+3)+(2-3)"));
+        int[][] q = {
+                {0, 0, 0, 0, 0,},
+                {0, -1, -1, -1, 0},
+                {0, -1, 0, -1, 0},
+                {0, -1, -1, -1, 0}
+        };
+        //System.out.println(canReach(q,new int[]{1,2}));
+        //System.out.println(combinationSum4(new int[]{1, 2, 3}, 4));
+        //System.out.println(majorityElement(new int[]{1,1,1,2,2,2,3,3, 3}));
+        //System.out.println(containsNearbyAlmostDuplicate(new int[]{1,5,9,1,5,9}, 2, 3));
+        //System.out.println(containsDuplicate(new int[] {1,2,3,1}));
+        //System.out.println(Arrays.toString(wiggleSort(new int[]{1, 1, 1, 1, 2, 6, 5, 3, 3, 6, 5, 9, 8, 7, 4, 5, 9, 8, 6})));
+        //System.out.println(kthLargestElement(new int[] {1,2,3,4,5,6,9,8,7}, 2));
+        //System.out.println(hasPoints(new int[][] {{1,6}, {1,1}, {7,3}, {6,7}}, 8));
+        //System.out.println(count(4));
+        //System.out.println(makeItValidParanthesis(""));
+        System.out.println(binarySort(new int[] {-5,-3,0,0,0,0,5,9,75,523}, -7));
     }
 
     public static int singleNumber(int[] nums) {
@@ -340,7 +358,7 @@ public class AllArrayProblems {
     //LP 240
     public static boolean searchMatrix(int[][] matrix, int target) {
         int row = matrix.length - 1, col = 0;
-        while (row >=0 && row < matrix.length && col >=0 && col < matrix[0].length) {
+        while (row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length) {
             int value = matrix[row][col];
             if (value == target) {
                 return true;
@@ -354,14 +372,14 @@ public class AllArrayProblems {
     }
 
     public static int numIslands(char[][] grid) {
-        if(grid == null || grid.length == 0) return 0;
+        if (grid == null || grid.length == 0) return 0;
         int length = grid.length;
         int width = grid[0].length;
         boolean[][] visited = new boolean[length][width];
-        int count= 0;
-        for(int i=0;i<length;i++){
-            for(int j=0;j<width;j++){
-                if(!visited[i][j] && grid[i][j] == 1) {
+        int count = 0;
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < width; j++) {
+                if (!visited[i][j] && grid[i][j] == 1) {
                     numOfIslandsHelper(grid, visited, i, j);
                     count++;
                 }
@@ -371,38 +389,38 @@ public class AllArrayProblems {
     }
 
     private static void numOfIslandsHelper(char[][] grid, boolean[][] visited, int i, int j) {
-        if(!(i>= 0 && j>=0 && i<grid.length && j<grid[0].length)){
+        if (!(i >= 0 && j >= 0 && i < grid.length && j < grid[0].length)) {
             return;
         }
-        if(visited[i][j]){
+        if (visited[i][j]) {
             return;
         }
-        if(grid[i][j] == 0){
+        if (grid[i][j] == 0) {
             return;
         }
         visited[i][j] = true;
-        numOfIslandsHelper(grid, visited, i+1, j);
-        numOfIslandsHelper(grid, visited, i-1, j);
-        numOfIslandsHelper(grid, visited, i, j+1);
-        numOfIslandsHelper(grid, visited, i, j-1);
+        numOfIslandsHelper(grid, visited, i + 1, j);
+        numOfIslandsHelper(grid, visited, i - 1, j);
+        numOfIslandsHelper(grid, visited, i, j + 1);
+        numOfIslandsHelper(grid, visited, i, j - 1);
     }
 
     public static List<String> topKFrequent(String[] words, int k) {
-        if(words.length == 0 || k == 0) return new ArrayList<>();
+        if (words.length == 0 || k == 0) return new ArrayList<>();
         Map<String, Integer> map = new HashMap<>();
-        for(String s : words){
-            map.put(s, map.getOrDefault(s, 0)+1);
+        for (String s : words) {
+            map.put(s, map.getOrDefault(s, 0) + 1);
         }
 
-        PriorityQueue<String> pq = new PriorityQueue<>(new Comparator<String>(){
-            public int compare(String o1, String o2){
+        PriorityQueue<String> pq = new PriorityQueue<>(new Comparator<String>() {
+            public int compare(String o1, String o2) {
                 return map.get(o1).equals(map.get(o2)) ? o2.compareTo(o1) : map.get(o1) - map.get(o2);
             }
         });
 
-        for(String s : map.keySet()){
+        for (String s : map.keySet()) {
             pq.add(s);
-            if(pq.size() > k){
+            if (pq.size() > k) {
                 pq.poll();
             }
         }
@@ -414,7 +432,7 @@ public class AllArrayProblems {
     }
 
     public static void setZeroes(int[][] matrix) {
-        if(matrix == null || matrix.length == 0) return;
+        if (matrix == null || matrix.length == 0) return;
         int r = matrix.length;
         int c = matrix[0].length;
         boolean isCol = false;
@@ -424,7 +442,7 @@ public class AllArrayProblems {
             for (int j = 1; j < c; j++) {
                 //isCol = isCol || matrix[0][j] == 0;
                 int val = matrix[i][j];
-                if(val == 0){
+                if (val == 0) {
                     matrix[0][j] = 0;
                     matrix[i][0] = 0;
                 }
@@ -433,33 +451,33 @@ public class AllArrayProblems {
 
         for (int i = 1; i < r; i++) {
             for (int j = 1; j < c; j++) {
-                if(matrix[0][j] == 0 || matrix[i][0] == 0){
+                if (matrix[0][j] == 0 || matrix[i][0] == 0) {
                     matrix[i][j] = 0;
                 }
             }
         }
-        if(matrix[0][0] == 0){
-            for(int i=0; i< c;i++)
+        if (matrix[0][0] == 0) {
+            for (int i = 0; i < c; i++)
                 matrix[0][i] = 0;
         }
-        if(isRow){
-            for(int i=0; i< r;i++)
+        if (isRow) {
+            for (int i = 0; i < r; i++)
                 matrix[i][0] = 0;
         }
     }
 
     public static void reverseWords(char[] s) {
         int len = s.length;
-        if(s == null || len == 0) return;
-        int start= 0;
-        reverse(s,0,len -1);
-        int st= 0;
-        for(int i=0; i<= len;i++){
-            if(s[i] == ' ' || i == len - 1){
-                if(i == len - 1){
+        if (s == null || len == 0) return;
+        int start = 0;
+        reverse(s, 0, len - 1);
+        int st = 0;
+        for (int i = 0; i <= len; i++) {
+            if (s[i] == ' ' || i == len - 1) {
+                if (i == len - 1) {
                     i = len;
                 }
-                reverse(s, st, i-1);
+                reverse(s, st, i - 1);
                 st = i + 1;
             }
         }
@@ -468,20 +486,19 @@ public class AllArrayProblems {
 
     private static int removeSpaces(char[] s) {
         int idx = 0;
-        for(int i=0; i< s.length; i++){
-            if(i > 0 && s[i] == ' ' && s[i -1] == ' '){
+        for (int i = 0; i < s.length; i++) {
+            if (i > 0 && s[i] == ' ' && s[i - 1] == ' ') {
                 continue;
-            }
-            else{
+            } else {
                 s[idx++] = s[i];
             }
         }
-        if(s[idx - 1] == ' ') idx--;
-        return idx-1;
+        if (s[idx - 1] == ' ') idx--;
+        return idx - 1;
     }
 
-    private static void reverse(char[] chars, int s, int e){
-        while(s<e) {
+    private static void reverse(char[] chars, int s, int e) {
+        while (s < e) {
             char t = chars[s];
             chars[s++] = chars[e];
             chars[e--] = t;
@@ -493,7 +510,7 @@ public class AllArrayProblems {
         char[] chars = s.toCharArray();
         int trimmedEnd = removeSpaces(chars);
         int trimmedStart = 0;
-        while(chars[trimmedStart] == ' '){
+        while (chars[trimmedStart] == ' ') {
             trimmedStart++;
             continue;
         }
@@ -504,4 +521,377 @@ public class AllArrayProblems {
         String trimmed = new String(chars);
         return new String(trimmed);
     }
+
+    public static int calculate(String s) {
+        Stack<Integer> stack = new Stack<Integer>();
+        int result = 0;
+        int number = 0;
+        int sign = 1;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                number = 10 * number + (int) (c - '0');
+            } else if (c == '+') {
+                result += sign * number;
+                number = 0;
+                sign = 1;
+            } else if (c == '-') {
+                result += sign * number;
+                number = 0;
+                sign = -1;
+            } else if (c == '(') {
+                //we push the result first, then sign;
+                stack.push(result);
+                stack.push(sign);
+                //reset the sign and result for the value in the parenthesis
+                sign = 1;
+                result = 0;
+            } else if (c == ')') {
+                result += sign * number;
+                number = 0;
+                result *= stack.pop();    //stack.pop() is the sign before the parenthesis
+                result += stack.pop();   //stack.pop() now is the result calculated before the parenthesis
+
+            }
+        }
+        if (number != 0) result += sign * number;
+        return result;
+    }
+
+    private static boolean canReach(int[][] board, int[] dest) {
+        int length = board.length;
+        int width = board[0].length;
+        boolean arr[][] = new boolean[length][width];
+
+        //for(int i=0; i< length; i++){
+        //  for(int j = 0; j< width; j++){
+        //if(board[i][j] == 0){
+        helper(board, 0, 0, arr);
+        //}
+        //}
+        //}
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < width; j++) {
+                if (!arr[i][j] && board[i][j] == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static void helper(int[][] board, int x, int y, boolean[][] arr) {
+        if (!isValid(board, x, y)) {
+            return;
+        }
+        if (arr[x][y]) {
+            return;
+        }
+        if (board[x][y] == -1) {
+            return;
+        }
+
+        arr[x][y] = true;
+        helper(board, x + 1, y, arr);
+        helper(board, x - 1, y, arr);
+        helper(board, x, y + 1, arr);
+        helper(board, x, y - 1, arr);
+    }
+
+    private static boolean isValid(int[][] board, int x, int y) {
+        int length = board.length;
+        int width = board[0].length;
+        return x >= 0 && y >= 0 && x < length && y < width;
+    }
+
+    public static int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target + 1];
+        Arrays.fill(dp, -1);
+        dp[0] = 1;
+        return helper(nums, target, dp);
+    }
+
+    private static int helper(int[] nums, int target, int[] dp) {
+        if (dp[target] != -1) {
+            return dp[target];
+        }
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (target >= nums[i]) {
+                res += helper(nums, target - nums[i], dp);
+            }
+        }
+        dp[target] = res;
+        return res;
+    }
+
+    public static List<Integer> majorityElement(int[] nums) {
+        int n1 = 0, n2 = 0, c1 = 0, c2 = 0;
+        List<Integer> res = new ArrayList<>();
+        for (int n : nums) {
+            if (c1 > 0 && c2 > 0) {
+                if (n1 != n && n2 != n) {
+                    c1--;
+                    c2--;
+                } else if (n1 == n) {
+                    c1++;
+                } else {
+                    c2++;
+                }
+            } else if (c2 > 0) {
+                if (n2 == n) {
+                    c2++;
+                } else {
+                    n1 = n;
+                    c1++;
+                }
+            } else if (c1 > 0) {
+                if (n1 == n) {
+                    c1++;
+                } else {
+                    n2 = n;
+                    c2++;
+                }
+            } else {
+                n1 = n;
+                c1++;
+            }
+        }
+        c1 = c2 = 0;
+        int len = nums.length;
+        for (int n : nums) {
+            if (n == n1) {
+                c1++;
+            } else if (n2 == n) {
+                c2++;
+            }
+        }
+        if (len / 3 < c1) res.add(n1);
+        if (len / 3 < c2) res.add(n2);
+        return res;
+    }
+
+    private static long getID(long x, long w) {
+        return x < 0 ? (x + 1) / w - 1 : x / w;
+    }
+
+    private static boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        if (t < 0) return false;
+        Map<Long, Long> d = new HashMap<>();
+        long w = (long) t + 1;
+        for (int i = 0; i < nums.length; ++i) {
+            long m = getID(nums[i], w);
+            // check if bucket m is empty, each bucket may contain at most one element
+            if (d.containsKey(m))
+                return true;
+            // check the neighbor buckets for almost duplicate
+            if (d.containsKey(m - 1) && Math.abs(nums[i] - d.get(m - 1)) < w)
+                return true;
+            if (d.containsKey(m + 1) && Math.abs(nums[i] - d.get(m + 1)) < w)
+                return true;
+            // now bucket m is empty and no almost duplicate in neighbor buckets
+            d.put(m, (long) nums[i]);
+            if (i >= k) d.remove(getID(nums[i - k], w));
+        }
+        return false;
+    }
+
+    public static boolean containsDuplicate(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (set.contains(nums[i])) {
+                return false;
+            }
+            set.add(nums[i]);
+        }
+        return true;
+    }
+
+    public static int[] wiggleSort(int[] nums) {
+        int median = kthLargestElement(nums, (nums.length - 1) / 2);
+        int[] res = new int[nums.length];
+        int n = nums.length;
+
+        int left = 0, i = 0, right = n - 1;
+
+        while (i <= right) {
+            int ind = newIndex(i, n);
+            int leftidx = newIndex(left++, n);
+            int rightidx = newIndex(right--, n);
+            if (nums[newIndex(i, n)] > median) {
+                swap(nums, newIndex(left++, n), newIndex(i++, n));
+            } else if (nums[newIndex(i, n)] < median) {
+                swap(nums, newIndex(right--, n), newIndex(i, n));
+            } else {
+                i++;
+            }
+        }
+        return nums;
+    }
+
+    private static int newIndex(int index, int n) {
+        return (1 + 2 * index) % (n | 1);
+    }
+
+
+    private static void swap(int[] nums, int l, int r) {
+        int temp = nums[l];
+        nums[l] = nums[r];
+        nums[r] = temp;
+    }
+
+    private static int kthLargestElement(int nums[], int k) {
+        return helper(nums, 0, nums.length - 1, k);
+    }
+
+    private static int helper(int[] nums, int s, int e, int k) {
+        Random random = new Random(0);
+        int n = nums.length;
+        while (s <= e) {
+            int pivot = random.nextInt(e - s + 1) + s;
+            int pos = partition(nums, s, e, pivot);
+            int pivotElement = nums[pos];
+            if (pos == n - k) {
+                return pivotElement;
+            } else if (pos > n - k) {
+                e = pos - 1;
+            } else {
+                s = pos + 1;
+            }
+        }
+        return -1;
+    }
+
+    private static int partition(int[] nums, int s, int e, int pivot) {
+        int pivotElement = nums[pivot];
+        swap(nums, e, pivot);
+        int i = s;
+        for (int j = s; j < e; j++) {
+            if (pivotElement > nums[j]) {
+                swap(nums, i, j);
+                i++;
+            }
+        }
+        swap(nums, e, i);
+        return i;
+    }
+
+    private static boolean hasPoints(int[][] points, int target){
+        HashMap<Integer, HashSet<Integer>> mapper = new HashMap<>();
+        for(int [] point : points){
+            int value = target - point[0];
+            if(mapper.containsKey(value)){
+                if(mapper.get(value).contains(target - point[1])){
+                    return true;
+                }
+            }
+            if(!mapper.containsKey(point[0])){
+                mapper.put(point[0], new HashSet<>());
+            }
+            mapper.get(point[0]).add(point[1]);
+            mapper.put(point[0], mapper.get(point[0]));
+        }
+        return false;
+    }
+
+    public static int count(int n) {
+        return count(0, n - 1, 1) + count(1, n - 1, 1);
+    }
+
+    public static int count(int color, int n, int colorCount) {
+        // check in cache
+        // terminal
+        if (n == 1) {
+            return colorCount == 2 ? 1 : 2;
+        }
+
+        int count = 0;
+
+        // WW
+        if (colorCount == 2) {
+            count = count(notColor(color), n - 1, 1);
+        } else {
+            count = count(color, n - 1, 2) +
+                    count(notColor(color), n - 1, 1);
+        }
+
+        // add to cache
+        return count;
+    }
+
+    private static int notColor(int color) {
+        return color == 0 ? 1 : 0;
+    }
+
+    public static String makeItValidParanthesis(String s){
+        Stack<Integer> stack = new Stack<>();
+        Set<Integer> set = new HashSet<>();
+        for(int i=0; i< s.length(); i++){
+            char c = s.charAt(i);
+            if(c == '('){
+                stack.push(i);
+            }
+            else{
+                if(stack.empty()) {
+                    set.add(i);
+                }
+                else{
+                    stack.pop();
+                }
+            }
+        }
+        set.addAll(stack);
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i< s.length(); i++){
+            if(set.contains(i)){
+                continue;
+            }
+            sb.append(s.charAt(i));
+        }
+        return sb.toString();
+    }
+
+    private static int binarySort(int[] nums, int n){
+        int l =0, r = nums.length;
+        while(l < r){
+            int mid = l + (r-l)/2;
+            //if(nums[mid] == n) return mid;
+            if(nums[mid] >= n) r = mid;
+            else l = mid + 1;
+        }
+        return l;
+    }
+
+    //TODO
+    /*private static void paintSticks(int n){
+        List<String> res = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        *//*int len = sb.length();
+        paint('W', 0, sb, n, res);
+        sb.delete(len, sb.length());
+        paint('B', 0, sb, n, res);*//*
+        paint(' ', 0, ,0,sb, n, res);
+        System.out.println(res);;
+    }
+
+    private static void paint(char w, int l,int r, StringBuilder sb, int n, List<String> res) {
+        if(sb.length() == n) {
+            res.add(sb.toString());
+            return ;
+        }
+        if(l == 2) {
+            //w = w == 'W' ? 'B' : 'W';
+            //i = 0;
+            return;
+        }
+        sb += w;
+        int len = sb.length();
+        paint(w, l + 1, r, sb, n, res);
+        i = 0;
+        paint(w, l, r + 1, sb, n, res);
+        //return sb.toString();
+    }*/
 }
+
+

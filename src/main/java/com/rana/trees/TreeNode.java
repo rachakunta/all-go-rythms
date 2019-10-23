@@ -5,9 +5,15 @@ import java.util.List;
 
 public class TreeNode {
     public int val;
+    public TreeNode left;
+    public TreeNode right;
     public List<TreeNode> children;
 
     public TreeNode() {
+    }
+
+    public TreeNode(int val){
+        this.val = val;
     }
 
     public TreeNode(int val, List<TreeNode> children) {
@@ -63,5 +69,14 @@ public class TreeNode {
             }
             return res;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "TreeNode{" +
+                "val=" + val +
+                ", left=" + left +
+                ", right=" + right +
+                '}'+"\n";
     }
 }
